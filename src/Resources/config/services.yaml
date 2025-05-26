@@ -20,6 +20,8 @@ services:
       - '@jgniecki\SitemapBundle\Sitemap\Resolver\DefaultRouteResolver'
       - !tagged_iterator sitemap.resolver
     public: true
+    tags:
+      - { name: controller.service_arguments }
 
   jgniecki\SitemapBundle\Sitemap\SitemapGenerator: '@sitemap.generator'
 
