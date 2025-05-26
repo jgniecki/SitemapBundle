@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
     {
         $values = [];
         foreach (ChangeFreqEnum::cases() as $value) {
-            $values = $value->value;
+            $values[] = $value->value;
         }
         return $values;
     }
