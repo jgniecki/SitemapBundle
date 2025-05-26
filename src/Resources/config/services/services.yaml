@@ -1,0 +1,42 @@
+# src/Resources/config/services.yaml
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  jgniecki\SitemapBundle\:
+    resource: '../../*'
+    exclude:
+      - '../../Entity/'
+      - '../../DependencyInjection/'
+      - '../../Resources/'
+      - '../../SitemapBundle.php'
+
+  jgniecki\SitemapBundle\Sitemap\SitemapGenerator:
+    arguments:
+      - '@router'
+      - '@jgniecki\SitemapBundle\Sitemap\Resolver\DefaultRouteResolver'
+      - !tagged_iterator sitemap.resolver
+    public: true
+
+  jgniecki\SitemapBundle\Sitemap\Resolver\DefaultRouteResolver:
+    arguments:
+      - '@doctrine.orm.entity_manager'
+      - '%doctrine.orm.entity_managers.default.mappings%'
+    tags:
+      - { name: sitemap.resolver, priority: -100 }
+
+  jgniecki\SitemapBundle\Controller\SitemapController:
+    public: true
+    tags: ['controller.service_arguments']
+    arguments:
+      - '@jgniecki\SitemapBundle\Sitemap\SitemapGenerator'
+      - '@twig'
+
+  _instanceof:
+    jgniecki\SitemapBundle\Sitemap\RouteResolverInterface:
+      tags: ['sitemap.resolver']
+twig:
+  paths:
+    '%kernel.project_dir%/src/Resources/views': Sitemap

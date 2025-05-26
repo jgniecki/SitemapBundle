@@ -1,0 +1,16 @@
+{
+  "name": "jgniecki/sitemap-bundle",
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "jgniecki\\SitemapBundle\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.1",
+    "symfony/framework-bundle": "^6.4",
+    "doctrine/orm": "^2.7",
+    "twig/twig": "^3.0"
+  }
+}
