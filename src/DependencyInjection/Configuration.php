@@ -8,7 +8,7 @@
 
 namespace jgniecki\SitemapBundle\DependencyInjection;
 
-use jgniecki\SitemapBundle\Sitemap\ChangeFreqEnum;
+use jgniecki\SitemapBundle\Sitemap\Enum\ChangeFreqEnum;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 

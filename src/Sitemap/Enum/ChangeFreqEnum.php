@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-namespace jgniecki\SitemapBundle\Sitemap;
+namespace jgniecki\SitemapBundle\Sitemap\Enum;
 
 enum ChangeFreqEnum: string
 {
