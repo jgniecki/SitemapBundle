@@ -11,6 +11,7 @@ namespace jgniecki\SitemapBundle\Sitemap;
 use jgniecki\SitemapBundle\Sitemap\Attribute\Sitemap;
 use jgniecki\SitemapBundle\Sitemap\Interface\RouteResolverInterface;
 use jgniecki\SitemapBundle\SitemapInterface\ImageProviderInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
@@ -83,7 +84,7 @@ class SitemapGenerator
         array &$urls
     ): void {
         foreach ($resolver->resolve($routeName, $pathVariables) as $params) {
-            $url = $this->router->generate($routeName, $params);
+            $url = $this->router->generate($routeName, $params, UrlGeneratorInterface::ABSOLUTE_URL);
             $urlData = $this->createUrlData($url, $sitemapAttr);
 
             if ($resolver instanceof ImageProviderInterface) {
@@ -99,7 +100,7 @@ class SitemapGenerator
 
     private function addStaticUrl(string $routeName, Sitemap $sitemapAttr, array &$urls): void
     {
-        $url = $this->router->generate($routeName);
+        $url = $this->router->generate($routeName, [], UrlGeneratorInterface::ABSOLUTE_URL);
         $urls[] = $this->createUrlData($url, $sitemapAttr);
     }
 

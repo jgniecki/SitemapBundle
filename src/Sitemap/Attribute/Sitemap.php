@@ -8,8 +8,7 @@
 
 namespace jgniecki\SitemapBundle\Sitemap\Attribute;
 
-use jgniecki\SitemapBundle\Sitemap\ChangeFreqEnum;
-use jgniecki\SitemapBundle\Sitemap\Resolver\DefaultRouteResolver;
+use jgniecki\SitemapBundle\Sitemap\Enum\ChangeFreqEnum;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
 class Sitemap
@@ -26,7 +25,7 @@ class Sitemap
         public ?ChangeFreqEnum $changefreq = null,
         public ?string $lastmod = null,
         public array $images = [],
-        public ?string $resolver = DefaultRouteResolver::class
+        public ?string $resolver
     ) {
     }
 }
