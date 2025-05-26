@@ -9,7 +9,6 @@
 namespace jgniecki\SitemapBundle\Sitemap;
 
 use jgniecki\SitemapBundle\Sitemap\Attribute\Sitemap;
-use jgniecki\SitemapBundle\Sitemap\Interface\DefaultRouteResolverInterface;
 use jgniecki\SitemapBundle\Sitemap\Interface\RouteResolverInterface;
 use jgniecki\SitemapBundle\SitemapInterface\ImageProviderInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -22,7 +21,6 @@ class SitemapGenerator
     private iterable $resolvers;
     public function __construct(
         private RouterInterface $router,
-        private DefaultRouteResolverInterface $defaultResolver,
         #[TaggedIterator('sitemap.resolver')]
         iterable $resolvers = []
     ) {
@@ -75,10 +73,6 @@ class SitemapGenerator
                 return;
             }
         }
-
-        if (!$sitemapAttr->resolver) {
-            $this->handleDefaultResolver($routeName, $pathVariables, $sitemapAttr, $urls);
-        }
     }
 
     private function processResolver(
@@ -100,25 +94,6 @@ class SitemapGenerator
             }
 
             $urls[] = $urlData;
-        }
-    }
-
-    private function handleDefaultResolver(
-        string $routeName,
-        array $pathVariables,
-        Sitemap $sitemapAttr,
-        array &$urls
-    ): void {
-        $resolver = $this->defaultResolver;
-
-        if ($resolver->supports($routeName, $pathVariables)) {
-            $this->processResolver(
-                $routeName,
-                $pathVariables,
-                $resolver,
-                $sitemapAttr,
-                $urls
-            );
         }
     }
 

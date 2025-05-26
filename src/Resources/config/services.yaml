@@ -16,15 +16,7 @@ services:
   jgniecki\SitemapBundle\Sitemap\SitemapGenerator:
     arguments:
       - '@router'
-      - '@jgniecki\SitemapBundle\Sitemap\Resolver\DefaultRouteResolver'
       - !tagged_iterator sitemap.resolver
-
-  jgniecki\SitemapBundle\Sitemap\Resolver\DefaultRouteResolver:
-    arguments:
-      - '@doctrine.orm.entity_manager'
-      - '%doctrine.orm.entity_managers.default.mappings%'
-    tags:
-      - { name: sitemap.resolver, priority: -100 }
 
   jgniecki\SitemapBundle\Controller\SitemapController:
     public: true
