@@ -29,9 +29,5 @@ class SitemapExtension extends Extension
 
         $container->setParameter('sitemap.default_priority', $config['default_priority']);
         $container->setParameter('sitemap.default_changefreq', $config['default_changefreq']);
-
-        if (class_exists('Symfony\Bundle\TwigBundle\TwigBundle')) {
-            $loader->load('packages/twig.yaml');
-        }
     }
 }
