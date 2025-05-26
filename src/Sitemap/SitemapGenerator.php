@@ -67,7 +67,7 @@ class SitemapGenerator
         Sitemap $sitemapAttr,
         array &$urls
     ): void {
-        $resolvers = $this->getApplicableResolvers($sitemapAttr);
+        $resolvers = $this->resolvers;
 
         foreach ($resolvers as $resolver) {
             if ($resolver->supports($routeName, $pathVariables)) {
@@ -79,18 +79,6 @@ class SitemapGenerator
         if (!$sitemapAttr->resolver) {
             $this->handleDefaultResolver($routeName, $pathVariables, $sitemapAttr, $urls);
         }
-    }
-
-    private function getApplicableResolvers(Sitemap $sitemapAttr): iterable
-    {
-        if ($sitemapAttr->resolver) {
-            return array_filter(
-                $this->resolvers,
-                fn($r) => $r::class === $sitemapAttr->resolver
-            );
-        }
-
-        return $this->resolvers;
     }
 
     private function processResolver(
