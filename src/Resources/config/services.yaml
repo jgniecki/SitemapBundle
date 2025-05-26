@@ -35,5 +35,5 @@ services:
       - '@twig'
 
   _instanceof:
-    jgniecki\SitemapBundle\Sitemap\RouteResolverInterface:
+    jgniecki\SitemapBundle\Sitemap\Interface\RouteResolverInterface:
       tags: ['sitemap.resolver']
