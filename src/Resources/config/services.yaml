@@ -13,12 +13,15 @@ services:
       - '../../Resources/'
       - '../../SitemapBundle.php'
 
-  jgniecki\SitemapBundle\Sitemap\SitemapGenerator:
+  sitemap.generator:
+    class: jgniecki\SitemapBundle\Sitemap\SitemapGenerator
     arguments:
       - '@router'
       - '@jgniecki\SitemapBundle\Sitemap\Resolver\DefaultRouteResolver'
       - !tagged_iterator sitemap.resolver
     public: true
+
+  jgniecki\SitemapBundle\Sitemap\SitemapGenerator: '@sitemap.generator'
 
   jgniecki\SitemapBundle\Sitemap\Resolver\DefaultRouteResolver:
     arguments:
