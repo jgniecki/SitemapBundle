@@ -37,6 +37,3 @@ services:
   _instanceof:
     jgniecki\SitemapBundle\Sitemap\RouteResolverInterface:
       tags: ['sitemap.resolver']
-twig:
-  paths:
-    '%kernel.project_dir%/src/Resources/views': Sitemap

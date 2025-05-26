@@ -22,12 +22,16 @@ class SitemapExtension extends Extension
 
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator(__DIR__.'/../Resources/config/services')
+            new FileLocator(__DIR__.'/../Resources/config')
         );
 
         $loader->load('services.yaml');
 
         $container->setParameter('sitemap.default_priority', $config['default_priority']);
         $container->setParameter('sitemap.default_changefreq', $config['default_changefreq']);
+
+        if (class_exists('Symfony\Bundle\TwigBundle\TwigBundle')) {
+            $loader->load('packages/twig.yaml');
+        }
     }
 }

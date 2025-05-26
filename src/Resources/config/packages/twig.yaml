@@ -1,0 +1,4 @@
+# src/Resources/config/packages/twig.yaml
+twig:
+  paths:
+    '%kernel.project_dir%/vendor/jgniecki/sitemap-bundle/src/Resources/views': 'Sitemap'
