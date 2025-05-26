@@ -25,7 +25,7 @@ class Sitemap
         public ?ChangeFreqEnum $changefreq = null,
         public ?string $lastmod = null,
         public array $images = [],
-        public ?string $resolver
+        public ?string $resolver = null
     ) {
     }
 }
