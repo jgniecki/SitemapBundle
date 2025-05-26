@@ -1,4 +1,4 @@
-sitemap_xml:
+sitemap:
   path: /sitemap.xml
   controller: jgniecki\SitemapBundle\Controller\SitemapController
   methods: GET
