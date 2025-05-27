@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-namespace jgniecki\SitemapBundle\SitemapInterface;
+namespace jgniecki\SitemapBundle\Sitemap\Interface;
 
 interface ImageProviderInterface
 {

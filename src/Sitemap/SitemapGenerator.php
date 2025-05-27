@@ -10,7 +10,7 @@ namespace jgniecki\SitemapBundle\Sitemap;
 
 use jgniecki\SitemapBundle\Sitemap\Attribute\Sitemap;
 use jgniecki\SitemapBundle\Sitemap\Interface\RouteResolverInterface;
-use jgniecki\SitemapBundle\SitemapInterface\ImageProviderInterface;
+use jgniecki\SitemapBundle\Sitemap\Interface\ImageProviderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Routing\Route;
