@@ -8,6 +8,7 @@
 
 namespace jgniecki\SitemapBundle;
 
+use jgniecki\SitemapBundle\DependencyInjection\CompilerPass\AutoResolverCompilerPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -16,5 +17,6 @@ class SitemapBundle extends Bundle
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
+        $container->addCompilerPass(new AutoResolverCompilerPass());
     }
 }
