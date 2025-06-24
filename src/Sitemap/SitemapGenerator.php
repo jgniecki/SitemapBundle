@@ -18,15 +18,12 @@ use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
 class SitemapGenerator
 {
-
-    private iterable $resolvers;
     private array $resolverIndex = [];
     public function __construct(
         private RouterInterface $router,
         #[TaggedIterator('sitemap.resolver')]
         iterable $resolvers = []
     ) {
-        $this->resolvers = $resolvers;
         foreach ($resolvers as $resolver) {
             $this->resolverIndex[$resolver::class] = $resolver;
         }
@@ -71,23 +68,6 @@ class SitemapGenerator
             return;
         }
 
-        $this->processDynamicRoute($routeName, $pathVariables, $sitemapAttr, $urls);
-    }
-
-    private function processDynamicRoute(
-        string $routeName,
-        array $pathVariables,
-        Sitemap $sitemapAttr,
-        array &$urls
-    ): void {
-        $resolvers = $this->resolvers;
-
-        foreach ($resolvers as $resolver) {
-            if ($resolver->supports($routeName, $pathVariables)) {
-                $this->processResolver($routeName, $pathVariables, $resolver, $sitemapAttr, $urls);
-                return;
-            }
-        }
     }
 
     private function processResolver(
