@@ -20,12 +20,16 @@ class SitemapGenerator
 {
 
     private iterable $resolvers;
+    private array $resolverIndex = [];
     public function __construct(
         private RouterInterface $router,
         #[TaggedIterator('sitemap.resolver')]
         iterable $resolvers = []
     ) {
         $this->resolvers = $resolvers;
+        foreach ($resolvers as $resolver) {
+            $this->resolverIndex[$resolver::class] = $resolver;
+        }
     }
 
     public function generate(): array
@@ -51,6 +55,16 @@ class SitemapGenerator
         array &$urls
     ): void {
         $pathVariables = $this->getPathVariables($route);
+
+        if ($sitemapAttr->resolver && isset($this->resolverIndex[$sitemapAttr->resolver])) {
+            $resolver = $this->resolverIndex[$sitemapAttr->resolver];
+
+            if ($resolver->supports($routeName, $pathVariables)) {
+                $this->processResolver($routeName, $pathVariables, $resolver, $sitemapAttr, $urls);
+            }
+
+            return;
+        }
 
         if (empty($pathVariables)) {
             $this->addStaticUrl($routeName, $sitemapAttr, $urls);
@@ -152,7 +166,8 @@ class SitemapGenerator
             $methodAttr?->priority ?? $classAttr?->priority,
             $methodAttr?->changefreq ?? $classAttr?->changefreq,
             $methodAttr?->lastmod ?? $classAttr?->lastmod,
-            array_merge($classAttr?->images ?? [], $methodAttr?->images ?? [])
+            array_merge($classAttr?->images ?? [], $methodAttr?->images ?? []),
+            $methodAttr?->resolver ?? $classAttr?->resolver
         );
 
         return $mergedAttr;
