@@ -120,10 +120,12 @@ class SitemapGenerator
 
     private function createUrlData(string $url, Sitemap $sitemapAttr): array
     {
+        $changefreq = $sitemapAttr->changefreq?: null;
+
         return [
             'loc' => $url,
             'priority' => $sitemapAttr->priority,
-            'changefreq' => $sitemapAttr->changefreq,
+            'changefreq' => $changefreq,
             'lastmod' => $sitemapAttr->lastmod,
             'images' => $sitemapAttr->images
         ];
