@@ -19,13 +19,15 @@ class Sitemap
      * @param string|null $lastmod
      * @param $images array<{loc: string, title: string, caption: string}>
      * @param string|null $resolver
+     * @param string|null $group
      */
     public function __construct(
         public ?float $priority = null,
         public ?ChangeFreqEnum $changefreq = null,
         public ?string $lastmod = null,
         public array $images = [],
-        public ?string $resolver = null
+        public ?string $resolver = null,
+        public ?string $group = null
     ) {
     }
 }

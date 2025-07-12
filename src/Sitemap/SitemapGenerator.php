@@ -9,6 +9,7 @@
 namespace jgniecki\SitemapBundle\Sitemap;
 
 use jgniecki\SitemapBundle\Sitemap\Attribute\Sitemap;
+use jgniecki\SitemapBundle\Sitemap\Enum\ChangeFreqEnum;
 use jgniecki\SitemapBundle\Sitemap\Interface\RouteResolverInterface;
 use jgniecki\SitemapBundle\Sitemap\Interface\ImageProviderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -22,22 +23,31 @@ class SitemapGenerator
     public function __construct(
         private RouterInterface $router,
         #[TaggedIterator('sitemap.resolver')]
-        iterable $resolvers = []
+        iterable $resolvers = [],
+        private array $groups = []
     ) {
         foreach ($resolvers as $resolver) {
             $this->resolverIndex[$resolver::class] = $resolver;
         }
     }
 
-    public function generate(): array
+    public function generate(?string $group = null): array
     {
         $urls = [];
+
+        if ($group === null) {
+            foreach ($this->groups as $name => $config) {
+                $url = $this->router->generate('sitemap_' . $name, [], UrlGeneratorInterface::ABSOLUTE_URL);
+                $sitemapAttr = $this->createSitemapFromConfig($config);
+                $urls[] = $this->createUrlData($url, $sitemapAttr);
+            }
+        }
 
         foreach ($this->router->getRouteCollection() as $routeName => $route) {
             $controller = $route->getDefault('_controller');
             $sitemapAttr = $this->getSitemapAttribute($route, $controller);
 
-            if ($sitemapAttr) {
+            if ($sitemapAttr && (($group === null && $sitemapAttr->group === null) || $sitemapAttr->group === $group)) {
                 $this->processRoute($routeName, $route, $sitemapAttr, $urls);
             }
         }
@@ -157,10 +167,28 @@ class SitemapGenerator
             $methodAttr?->changefreq ?? $classAttr?->changefreq,
             $lastmod,
             array_merge($classAttr?->images ?? [], $methodAttr?->images ?? []),
-            $methodAttr?->resolver ?? $classAttr?->resolver
+            $methodAttr?->resolver ?? $classAttr?->resolver,
+            $methodAttr?->group ?? $classAttr?->group
         );
 
         return $mergedAttr;
+    }
+
+    private function createSitemapFromConfig(array $config): Sitemap
+    {
+        $changefreq = null;
+        if (isset($config['changefreq'])) {
+            $changefreq = ChangeFreqEnum::from($config['changefreq']);
+        }
+
+        return new Sitemap(
+            $config['priority'] ?? null,
+            $changefreq,
+            $config['lastmod'] ?? null,
+            [],
+            null,
+            null
+        );
     }
 
     private function getPathVariables(Route $route): array

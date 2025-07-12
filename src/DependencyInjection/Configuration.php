@@ -25,6 +25,20 @@ class Configuration implements ConfigurationInterface
             ->values($this->changeFreqValues())
             ->defaultValue(null)
             ->end()
+            ->arrayNode('groups')
+                ->useAttributeAsKey('name')
+                ->arrayPrototype()
+                    ->children()
+                        ->scalarNode('path')->defaultNull()->end()
+                        ->scalarNode('priority')->defaultValue(null)->end()
+                        ->enumNode('changefreq')
+                            ->values($this->changeFreqValues())
+                            ->defaultValue(null)
+                        ->end()
+                        ->scalarNode('lastmod')->defaultNull()->end()
+                    ->end()
+                ->end()
+            ->end()
             ->end();
 
         return $treeBuilder;
