@@ -101,12 +101,15 @@ class SitemapGenerator
     private function createUrlData(string $url, Sitemap $sitemapAttr): array
     {
         $changefreq = $sitemapAttr->changefreq? $sitemapAttr->changefreq->value : null;
-
+        $lastmod = $sitemapAttr->lastmod;
+        if (strtolower($lastmod) == 'now') {
+            $lastmod = $this->lastmodNow();
+        }
         return [
             'loc' => $url,
             'priority' => $sitemapAttr->priority,
             'changefreq' => $changefreq,
-            'lastmod' => $sitemapAttr->lastmod,
+            'lastmod' => $lastmod,
             'images' => $sitemapAttr->images
         ];
     }
@@ -144,10 +147,15 @@ class SitemapGenerator
             return null;
         }
 
+        $lastmod = $methodAttr?->lastmod ?? $classAttr?->lastmod;
+        if (strtolower($lastmod) === 'now') {
+            $lastmod = $this->lastmodNow();
+        }
+
         $mergedAttr = new Sitemap(
             $methodAttr?->priority ?? $classAttr?->priority,
             $methodAttr?->changefreq ?? $classAttr?->changefreq,
-            $methodAttr?->lastmod ?? $classAttr?->lastmod,
+            $lastmod,
             array_merge($classAttr?->images ?? [], $methodAttr?->images ?? []),
             $methodAttr?->resolver ?? $classAttr?->resolver
         );
@@ -159,5 +167,12 @@ class SitemapGenerator
     {
         preg_match_all('/\{([a-zA-Z0-9_]+)\}/', $route->getPath(), $matches);
         return $matches[1] ?? [];
+    }
+
+    private function lastmodNow(): string
+    {
+        $lastmod = (new \DateTime('now'))->format('Y-m-d H:i:s.v') . 'Z';
+        $lastmod = str_replace(' ', 'T', $lastmod);
+        return $lastmod;
     }
 }
