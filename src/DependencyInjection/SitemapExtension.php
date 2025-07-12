@@ -29,5 +29,6 @@ class SitemapExtension extends Extension
 
         $container->setParameter('sitemap.default_priority', $config['default_priority']);
         $container->setParameter('sitemap.default_changefreq', $config['default_changefreq']);
+        $container->setParameter('sitemap.groups', $config['groups']);
     }
 }

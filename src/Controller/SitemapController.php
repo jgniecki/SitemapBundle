@@ -20,9 +20,9 @@ class SitemapController extends AbstractController
         private readonly Environment      $twig
     ) {}
 
-    public function __invoke(): Response
+    public function __invoke(?string $group = null): Response
     {
-        $urls = $this->generator->generate();
+        $urls = $this->generator->generate($group);
 
         return new Response(
             $this->twig->render('@Sitemap/sitemap.xml.twig', ['urls' => $urls]),

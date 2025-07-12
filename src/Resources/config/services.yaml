@@ -17,6 +17,13 @@ services:
     arguments:
       - '@router'
       - !tagged_iterator sitemap.resolver
+      - '%sitemap.groups%'
+
+  jgniecki\SitemapBundle\Routing\SitemapRouteLoader:
+    arguments:
+      $groups: '%sitemap.groups%'
+    tags:
+      - { name: routing.loader }
 
   jgniecki\SitemapBundle\Controller\SitemapController:
     public: true
