@@ -112,7 +112,7 @@ class SitemapGenerator
     {
         $changefreq = $sitemapAttr->changefreq? $sitemapAttr->changefreq->value : null;
         $lastmod = $sitemapAttr->lastmod;
-        if (strtolower($lastmod) == 'now') {
+        if ($lastmod && strtolower($lastmod) == 'now') {
             $lastmod = $this->lastmodNow();
         }
         return [
@@ -158,7 +158,7 @@ class SitemapGenerator
         }
 
         $lastmod = $methodAttr?->lastmod ?? $classAttr?->lastmod;
-        if (strtolower($lastmod) === 'now') {
+        if ($lastmod && strtolower($lastmod) === 'now') {
             $lastmod = $this->lastmodNow();
         }
 
@@ -180,11 +180,15 @@ class SitemapGenerator
         if (isset($config['changefreq'])) {
             $changefreq = ChangeFreqEnum::from($config['changefreq']);
         }
+        $lastmod = $config['lastmod'] ?? null;
+        if ($lastmod && strtolower($lastmod) === 'now') {
+            $lastmod = $this->lastmodNow();
+        }
 
         return new Sitemap(
             $config['priority'] ?? null,
             $changefreq,
-            $config['lastmod'] ?? null,
+            $lastmod,
             [],
             null,
             null
