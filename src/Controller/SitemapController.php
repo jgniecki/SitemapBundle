@@ -20,12 +20,14 @@ class SitemapController extends AbstractController
         private readonly Environment      $twig
     ) {}
 
-    public function __invoke(?string $group = null): Response
+    public function __invoke(?string $group = null, bool $index = false): Response
     {
-        $urls = $this->generator->generate($group);
+        $urls = $this->generator->generate($group, $index);
+
+        $template = $index ? '@Sitemap/sitemap_index.xml.twig' : '@Sitemap/sitemap.xml.twig';
 
         return new Response(
-            $this->twig->render('@Sitemap/sitemap.xml.twig', ['urls' => $urls]),
+            $this->twig->render($template, ['urls' => $urls]),
             Response::HTTP_OK,
             ['Content-Type' => 'application/xml']
         );

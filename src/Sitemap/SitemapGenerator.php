@@ -24,23 +24,29 @@ class SitemapGenerator
         private RouterInterface $router,
         #[TaggedIterator('sitemap.resolver')]
         iterable $resolvers = [],
-        private array $groups = []
+        private array $groups = [],
+        private array $default = []
     ) {
         foreach ($resolvers as $resolver) {
             $this->resolverIndex[$resolver::class] = $resolver;
         }
     }
 
-    public function generate(?string $group = null): array
+    public function generate(?string $group = null, bool $index = false): array
     {
         $urls = [];
 
-        if ($group === null) {
-            foreach ($this->groups as $name => $config) {
-                $url = $this->router->generate('sitemap_' . $name, [], UrlGeneratorInterface::ABSOLUTE_URL);
+        if ($index) {
+            $url = $this->router->generate('sitemap_default', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $sitemapAttr = $this->createSitemapFromConfig($this->default);
+            $urls[] = $this->createUrlData($url, $sitemapAttr);
+
+            foreach ($this->groups as $n => $config) {
+                $url = $this->router->generate('sitemap_' . $n, [], UrlGeneratorInterface::ABSOLUTE_URL);
                 $sitemapAttr = $this->createSitemapFromConfig($config);
                 $urls[] = $this->createUrlData($url, $sitemapAttr);
             }
+            return $urls;
         }
 
         foreach ($this->router->getRouteCollection() as $routeName => $route) {
