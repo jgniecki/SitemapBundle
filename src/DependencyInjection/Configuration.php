@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->enumNode('default_changefreq')
                     ->values($this->changeFreqValues())
-                    ->defaultValue(null)
+                    ->defaultNull()
                     ->end()
                 ->arrayNode('groups')
                     ->useAttributeAsKey('name')
