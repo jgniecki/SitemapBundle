@@ -49,8 +49,10 @@ sitemap:
     default_changefreq: null
     groups:
         default:
-            path: '/sitemap.xml'
+            path: '/sitemap-default.xml'
             lastmod: null
+#        custom:
+#          lastmod: 'now'
 ```
 
 Each group can override the path and last modification date for its sitemap.
