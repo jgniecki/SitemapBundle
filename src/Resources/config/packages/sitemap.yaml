@@ -1,0 +1,12 @@
+# src/Resources/config/packages/sitemap.yaml
+# This file is copied to your application's config/packages directory when
+# running "php bin/console sitemap:install".
+
+sitemap:
+    # Default configuration for SitemapBundle
+    default_priority: null
+    default_changefreq: null
+    groups:
+        default:
+            path: '/sitemap.xml'
+            lastmod: null
