@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 /**
- * @author Jakub Gniecki <kubuspl@onet.eu>
+ * @author Jakub Gniecki <jgniecki.contact@gmail.com>
  * @copyright
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,24 +20,26 @@ class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
-            ->scalarNode('default_priority')->defaultValue(null)->end()
-            ->enumNode('default_changefreq')
-            ->values($this->changeFreqValues())
-            ->defaultValue(null)
-            ->end()
-            ->arrayNode('groups')
-                ->useAttributeAsKey('name')
-                ->defaultValue(['default' => [
-                    'path' => '/sitemap.xml',
-                    'lastmod' => null,
-                ]])
-                ->arrayPrototype()
-                    ->children()
-                        ->scalarNode('path')->defaultNull()->end()
-                        ->scalarNode('lastmod')->defaultNull()->end()
+                ->scalarNode('default_priority')
+                    ->defaultValue(null)
+                    ->end()
+                ->enumNode('default_changefreq')
+                    ->values($this->changeFreqValues())
+                    ->defaultValue(null)
+                    ->end()
+                ->arrayNode('groups')
+                    ->useAttributeAsKey('name')
+                    ->defaultValue(['default' => [
+                        'path' => '/sitemap.xml',
+                        'lastmod' => null,
+                    ]])
+                    ->arrayPrototype()
+                        ->children()
+                            ->scalarNode('path')->defaultNull()->end()
+                            ->scalarNode('lastmod')->defaultNull()->end()
+                        ->end()
                     ->end()
                 ->end()
-            ->end()
             ->end();
 
         return $treeBuilder;
