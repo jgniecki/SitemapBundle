@@ -25,15 +25,12 @@ class Configuration implements ConfigurationInterface
             ->values($this->changeFreqValues())
             ->defaultValue(null)
             ->end()
-            ->arrayNode('default')
-                ->addDefaultsIfNotSet()
-                ->children()
-                    ->scalarNode('path')->defaultValue('/sitemap.xml')->end()
-                    ->scalarNode('lastmod')->defaultNull()->end()
-                ->end()
-            ->end()
             ->arrayNode('groups')
                 ->useAttributeAsKey('name')
+                ->defaultValue(['default' => [
+                    'path' => '/sitemap.xml',
+                    'lastmod' => null,
+                ]])
                 ->arrayPrototype()
                     ->children()
                         ->scalarNode('path')->defaultNull()->end()
