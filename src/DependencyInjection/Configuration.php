@@ -22,15 +22,15 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('default_priority')
                     ->defaultValue(null)
-                    ->end()
+                ->end()
                 ->enumNode('default_changefreq')
                     ->values($this->changeFreqValues())
                     ->defaultValue(null)
-                    ->end()
+                ->end()
                 ->arrayNode('groups')
                     ->useAttributeAsKey('name')
                     ->defaultValue(['default' => [
-                        'path' => '/sitemap.xml',
+                        'path' => '/sitemap-default.xml',
                         'lastmod' => null,
                     ]])
                     ->arrayPrototype()

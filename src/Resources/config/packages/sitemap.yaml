@@ -8,5 +8,5 @@ sitemap:
     default_changefreq: null
     groups:
         default:
-            path: '/sitemap.xml'
+            path: '/sitemap-default.xml'
             lastmod: null
