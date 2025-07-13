@@ -11,7 +11,7 @@ class SitemapRouteLoader extends Loader
 {
     private bool $loaded = false;
 
-    public function __construct(private array $groups = [])
+    public function __construct(private array $groups = [], private array $default = [])
     {
     }
 
@@ -24,10 +24,21 @@ class SitemapRouteLoader extends Loader
         $routes = new RouteCollection();
 
         // Index route
+        $hasGroups = !empty($this->groups);
         $routes->add('sitemap', new Route('/sitemap.xml', [
             '_controller' => SitemapController::class,
             'group' => null,
+            'index' => $hasGroups,
         ]));
+
+        if ($hasGroups) {
+            $path = $this->default['path'] ?? '/sitemap-default.xml';
+            $routes->add('sitemap_default', new Route($path, [
+                '_controller' => SitemapController::class,
+                'group' => null,
+                'index' => false,
+            ]));
+        }
 
         foreach ($this->groups as $name => $config) {
             $path = $config['path'] ?? ('/sitemap-' . $name . '.xml');

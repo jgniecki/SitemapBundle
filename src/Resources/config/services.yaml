@@ -18,10 +18,12 @@ services:
       - '@router'
       - !tagged_iterator sitemap.resolver
       - '%sitemap.groups%'
+      - '%sitemap.default%'
 
   jgniecki\SitemapBundle\Routing\SitemapRouteLoader:
     arguments:
       $groups: '%sitemap.groups%'
+      $default: '%sitemap.default%'
     tags:
       - { name: routing.loader }
 
