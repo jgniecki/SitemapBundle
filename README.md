@@ -30,8 +30,10 @@ routes in the sitemap:
 ```php
 use jgniecki\SitemapBundle\Sitemap\Attribute\Sitemap;
 use jgniecki\SitemapBundle\Sitemap\Enum\ChangeFreqEnum;
+use Symfony\Component\Routing\Attribute\Route;
 
-#[Sitemap(priority: 0.8, changefreq: ChangeFreqEnum::DAILY, group: 'blog')]
+#[Sitemap(priority: 1.0, changefreq: ChangeFreqEnum::DAILY)]
+#[Route('/', name: 'homepage')]
 public function index(): Response
 {
     // ...
