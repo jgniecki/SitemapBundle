@@ -10,15 +10,18 @@
 namespace jgniecki\SitemapBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+#[AsCommand(
+    name: 'sitemap:install',
+    description: 'Install default configuration for SitemapBundle'
+)]
 class SitemapInstallCommand extends Command
 {
-    protected static $defaultName = 'sitemap:install';
-    protected static $defaultDescription = 'Install default configuration for SitemapBundle';
 
     public function __construct(private KernelInterface $kernel)
     {
