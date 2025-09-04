@@ -17,13 +17,11 @@ services:
     arguments:
       - '@router'
       - !tagged_iterator sitemap.resolver
-      - '%sitemap.groups%'
-      - '%sitemap.default%'
+      - '%sitemap.hosts%'
 
   jgniecki\SitemapBundle\Routing\SitemapRouteLoader:
     arguments:
-      $groups: '%sitemap.groups%'
-      $default: '%sitemap.default%'
+      $hosts: '%sitemap.hosts%'
     tags:
       - { name: routing.loader }
 
