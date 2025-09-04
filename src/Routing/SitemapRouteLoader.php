@@ -45,12 +45,13 @@ class SitemapRouteLoader extends Loader
             $pattern = $hostConfig['host'] ?? null;
             $condition = $pattern ? "request.getHost() matches '/^" . $pattern . "$/'" : null;
             $groups = $hostConfig['groups'] ?? [];
-            $default = $groups['default'] ?? ['path' => '/sitemap-default.xml', 'lastmod' => null];
+            $default = $groups['default'] ?? ['path' => null, 'lastmod' => null];
             unset($groups['default']);
 
             $hasGroups = !empty($groups);
 
-            $routes->add('sitemap_' . $alias, new Route('/sitemap.xml', [
+            $path = $hostConfig['path'] ?? '/sitemap.xml';
+            $routes->add('sitemap_' . $alias, new Route($path, [
                 '_controller' => SitemapController::class,
                 'group' => null,
                 'index' => $hasGroups,
@@ -63,6 +64,15 @@ class SitemapRouteLoader extends Loader
                     'group' => null,
                     'index' => false,
                 ], [], [], '', [], [], $condition));
+            } elseif (!empty($default['path'])) {
+                @trigger_error(
+                    sprintf(
+                        'Configuration "sitemap.hosts.%s.groups.default.path" is ignored when no additional groups are defined; use "sitemap.hosts.%s.path" instead.',
+                        $alias,
+                        $alias
+                    ),
+                    E_USER_WARNING
+                );
             }
 
             foreach ($groups as $name => $config) {

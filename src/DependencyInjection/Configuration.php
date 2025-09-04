@@ -32,9 +32,10 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue([
                         'default' => [
                             'host' => null,
+                            'path' => '/sitemap.xml',
                             'groups' => [
                                 'default' => [
-                                    'path' => '/sitemap-default.xml',
+                                    'path' => null,
                                     'lastmod' => null,
                                 ],
                             ],
@@ -43,11 +44,12 @@ class Configuration implements ConfigurationInterface
                     ->arrayPrototype()
                         ->children()
                             ->scalarNode('host')->defaultNull()->end()
+                            ->scalarNode('path')->defaultValue('/sitemap.xml')->end()
                             ->arrayNode('groups')
                                 ->useAttributeAsKey('name')
                                 ->defaultValue([
                                     'default' => [
-                                        'path' => '/sitemap-default.xml',
+                                        'path' => null,
                                         'lastmod' => null,
                                     ],
                                 ])

@@ -51,11 +51,13 @@ sitemap:
     default_changefreq: null
     hosts:
         default:
+            path: '/sitemap.xml'
             groups:
                 default:
-                    path: '/sitemap-default.xml'
+                    path: null
                     lastmod: null
 #        main:
+#            path: '/sitemap.xml'
 #            host: 'example.(com|pl)'
 #            groups:
 #                default:
@@ -64,13 +66,14 @@ sitemap:
 #                    path: '/sitemap-blog.xml'
 ```
 
-Each host can override the path and last modification date for its sitemap groups.
+Each host can override the path for the sitemap index and the path and last modification date for its sitemap groups. When a host defines only the default group, the `sitemap.hosts.<alias>.groups.default.path` setting is ignored and a warning is triggered; use `sitemap.hosts.<alias>.path` instead.
 
 ### Accessing the sitemap
 
 The bundle registers routes for your sitemaps automatically. Visit
-`/sitemap.xml` to see the sitemap index when multiple groups are configured.
-The default group's sitemap for a host is available under the path defined in
+the path defined in `sitemap.hosts.<alias>.path` (default `/sitemap.xml`) to see
+the sitemap index when multiple groups are configured. The default group's
+sitemap for a host is available under the path defined in
 `sitemap.hosts.<alias>.groups.default.path`.
 
 ## License
