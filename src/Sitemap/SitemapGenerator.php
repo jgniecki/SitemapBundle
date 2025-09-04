@@ -56,6 +56,10 @@ class SitemapGenerator
         }
 
         foreach ($this->router->getRouteCollection() as $routeName => $route) {
+            if (!$this->isRouteForHost($route, $host)) {
+                continue;
+            }
+
             $controller = $route->getDefault('_controller');
             $sitemapAttr = $this->getSitemapAttribute($route, $controller);
 
@@ -205,6 +209,22 @@ class SitemapGenerator
             null,
             null
         );
+    }
+
+    private function isRouteForHost(Route $route, string $host): bool
+    {
+        if ($route->getHost() === '') {
+            return true;
+        }
+
+        $compiled = $route->compile();
+        $regex = $compiled->getHostRegex();
+
+        if ($regex !== null) {
+            return preg_match($regex, $host) === 1;
+        }
+
+        return strcasecmp($route->getHost(), $host) === 0;
     }
 
     private function getPathVariables(Route $route): array
