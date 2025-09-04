@@ -6,7 +6,9 @@ sitemap:
     # Default configuration for SitemapBundle
     default_priority: null
     default_changefreq: null
-    groups:
+    hosts:
         default:
-            path: '/sitemap-default.xml'
-            lastmod: null
+            groups:
+                default:
+                    path: '/sitemap-default.xml'
+                    lastmod: null

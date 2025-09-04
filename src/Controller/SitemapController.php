@@ -10,6 +10,7 @@ namespace jgniecki\SitemapBundle\Controller;
 
 use jgniecki\SitemapBundle\Sitemap\SitemapGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
@@ -20,9 +21,10 @@ class SitemapController extends AbstractController
         private readonly Environment      $twig
     ) {}
 
-    public function __invoke(?string $group = null, bool $index = false): Response
+    public function __invoke(Request $request, ?string $group = null, bool $index = false): Response
     {
-        $urls = $this->generator->generate($group, $index);
+        $host = $request->getHost();
+        $urls = $this->generator->generate($host, $group, $index);
 
         $template = $index ? '@Sitemap/sitemap_index.xml.twig' : '@Sitemap/sitemap.xml.twig';
 

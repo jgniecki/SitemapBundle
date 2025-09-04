@@ -17,7 +17,7 @@ class SitemapRouteLoader extends Loader
 {
     private bool $loaded = false;
 
-    public function __construct(private array $groups = [], private array $default = [])
+    public function __construct(private array $hosts = [])
     {
     }
 
@@ -29,29 +29,49 @@ class SitemapRouteLoader extends Loader
 
         $routes = new RouteCollection();
 
-        // Index route
-        $hasGroups = !empty($this->groups);
-        $routes->add('sitemap', new Route('/sitemap.xml', [
-            '_controller' => SitemapController::class,
-            'group' => null,
-            'index' => $hasGroups,
-        ]));
-
-        if ($hasGroups) {
-            $path = $this->default['path'] ?? '/sitemap-default.xml';
-            $routes->add('sitemap_default', new Route($path, [
-                '_controller' => SitemapController::class,
-                'group' => null,
-                'index' => false,
-            ]));
+        $orderedHosts = [];
+        foreach ($this->hosts as $alias => $config) {
+            if (!empty($config['host'])) {
+                $orderedHosts[$alias] = $config;
+            }
+        }
+        foreach ($this->hosts as $alias => $config) {
+            if (empty($config['host'])) {
+                $orderedHosts[$alias] = $config;
+            }
         }
 
-        foreach ($this->groups as $name => $config) {
-            $path = $config['path'] ?? ('/sitemap-' . $name . '.xml');
-            $routes->add('sitemap_' . $name, new Route($path, [
+        foreach ($orderedHosts as $alias => $hostConfig) {
+            $pattern = $hostConfig['host'] ?? null;
+            $condition = $pattern ? "request.getHost() matches '/^" . $pattern . "$/'" : null;
+            $groups = $hostConfig['groups'] ?? [];
+            $default = $groups['default'] ?? ['path' => '/sitemap-default.xml', 'lastmod' => null];
+            unset($groups['default']);
+
+            $hasGroups = !empty($groups);
+
+            $routes->add('sitemap_' . $alias, new Route('/sitemap.xml', [
                 '_controller' => SitemapController::class,
-                'group' => $name,
-            ]));
+                'group' => null,
+                'index' => $hasGroups,
+            ], [], [], '', [], [], $condition));
+
+            if ($hasGroups) {
+                $path = $default['path'] ?? '/sitemap-default.xml';
+                $routes->add('sitemap_' . $alias . '_default', new Route($path, [
+                    '_controller' => SitemapController::class,
+                    'group' => null,
+                    'index' => false,
+                ], [], [], '', [], [], $condition));
+            }
+
+            foreach ($groups as $name => $config) {
+                $path = $config['path'] ?? ('/sitemap-' . $name . '.xml');
+                $routes->add('sitemap_' . $alias . '_' . $name, new Route($path, [
+                    '_controller' => SitemapController::class,
+                    'group' => $name,
+                ], [], [], '', [], [], $condition));
+            }
         }
 
         $this->loaded = true;

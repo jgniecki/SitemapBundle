@@ -24,25 +24,31 @@ class SitemapGenerator
         private RouterInterface $router,
         #[TaggedIterator('sitemap.resolver')]
         iterable $resolvers = [],
-        private array $groups = [],
-        private array $default = []
+        private array $hosts = []
     ) {
         foreach ($resolvers as $resolver) {
             $this->resolverIndex[$resolver::class] = $resolver;
         }
     }
 
-    public function generate(?string $group = null, bool $index = false): array
+    public function generate(string $host, ?string $group = null, bool $index = false): array
     {
+        [$alias, $hostConfig] = $this->resolveHost($host);
+
+        $groups = $hostConfig['groups'] ?? [];
+        $default = $groups['default'] ?? ['path' => '/sitemap-default.xml', 'lastmod' => null];
+        unset($groups['default']);
+
         $urls = [];
 
         if ($index) {
-            $url = $this->router->generate('sitemap_default', [], UrlGeneratorInterface::ABSOLUTE_URL);
-            $sitemapAttr = $this->createSitemapFromConfig($this->default);
+            $routePrefix = 'sitemap_' . $alias;
+            $url = $this->router->generate($routePrefix . '_default', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $sitemapAttr = $this->createSitemapFromConfig($default);
             $urls[] = $this->createUrlData($url, $sitemapAttr);
 
-            foreach ($this->groups as $n => $config) {
-                $url = $this->router->generate('sitemap_' . $n, [], UrlGeneratorInterface::ABSOLUTE_URL);
+            foreach ($groups as $n => $config) {
+                $url = $this->router->generate($routePrefix . '_' . $n, [], UrlGeneratorInterface::ABSOLUTE_URL);
                 $sitemapAttr = $this->createSitemapFromConfig($config);
                 $urls[] = $this->createUrlData($url, $sitemapAttr);
             }
@@ -212,5 +218,23 @@ class SitemapGenerator
         $lastmod = (new \DateTime('now'))->format('Y-m-d H:i:s.v') . 'Z';
         $lastmod = str_replace(' ', 'T', $lastmod);
         return $lastmod;
+    }
+
+    private function resolveHost(string $host): array
+    {
+        foreach ($this->hosts as $alias => $config) {
+            if (!empty($config['host']) && @preg_match('#^' . $config['host'] . '$#', $host)) {
+                return [$alias, $config];
+            }
+        }
+
+        foreach ($this->hosts as $alias => $config) {
+            if (empty($config['host'])) {
+                return [$alias, $config];
+            }
+        }
+
+        $alias = array_key_first($this->hosts);
+        return [$alias, $this->hosts[$alias]];
     }
 }

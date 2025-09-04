@@ -27,16 +27,37 @@ class Configuration implements ConfigurationInterface
                     ->values(array_merge($this->changeFreqValues(), [null]))
                     ->defaultNull()
                 ->end()
-                ->arrayNode('groups')
+                ->arrayNode('hosts')
                     ->useAttributeAsKey('name')
-                    ->defaultValue(['default' => [
-                        'path' => '/sitemap-default.xml',
-                        'lastmod' => null,
-                    ]])
+                    ->defaultValue([
+                        'default' => [
+                            'host' => null,
+                            'groups' => [
+                                'default' => [
+                                    'path' => '/sitemap-default.xml',
+                                    'lastmod' => null,
+                                ],
+                            ],
+                        ],
+                    ])
                     ->arrayPrototype()
                         ->children()
-                            ->scalarNode('path')->defaultNull()->end()
-                            ->scalarNode('lastmod')->defaultNull()->end()
+                            ->scalarNode('host')->defaultNull()->end()
+                            ->arrayNode('groups')
+                                ->useAttributeAsKey('name')
+                                ->defaultValue([
+                                    'default' => [
+                                        'path' => '/sitemap-default.xml',
+                                        'lastmod' => null,
+                                    ],
+                                ])
+                                ->arrayPrototype()
+                                    ->children()
+                                        ->scalarNode('path')->defaultNull()->end()
+                                        ->scalarNode('lastmod')->defaultNull()->end()
+                                    ->end()
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
