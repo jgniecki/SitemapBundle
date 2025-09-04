@@ -36,7 +36,7 @@ class SitemapGenerator
         [$alias, $hostConfig] = $this->resolveHost($host);
 
         $groups = $hostConfig['groups'] ?? [];
-        $default = $groups['default'] ?? ['path' => '/sitemap-default.xml', 'lastmod' => null];
+        $default = $groups['default'] ?? ['path' => null, 'lastmod' => null];
         unset($groups['default']);
 
         $urls = [];
